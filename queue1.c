@@ -1,73 +1,87 @@
 #include<stdio.h>
-#define S 20
-void insert(int item,int *r,int q[]);
-int delete(int q[],int *f,int *r);
-void display(int q[],int r,int f);
-
-void insert(int item,int *r,int q[])
+#include<stdlib.h>
+struct node
 {
-if(*r==S-1)
-{
-printf("queue overflow\n");
-return;
-}
-q[++(*r)]=item;
-}
-
-int delete(int q[],int *f,int *r)
-{
-if(*f>*r)
-{
-printf("queue underflow\n");
-return -99;
-}
-return q[(*f)++];
-}
-void display(int q[],int r,int f)
-{
-int i;
-if(f>r)
-{
-printf("queue is empty\n");
-return;
-}
-printf("contents of queue are :\n");
-for(i=f;i<=r;i++)
-printf(" %d",q[i]);
-printf("\n");
-}
+int data;
+struct node *next;
+};
+typedef struct node * NODE;
+NODE getnode();
+NODE push(NODE head,int item);
+NODE pop(NODE head);
+void display(NODE head);
 int main()
 {
-int fr,re,it,x,ch,n,nd,qu[S],i;
-fr=0;
-re=-1;
-printf("\n enter 1 to insert\n2 to delete\n3 to display\n-1 to exit \n");
-scanf("%d",&ch);
-while(ch!=-1)
+NODE head=NULL;
+int ch,item;
+do
 {
+printf("press\n1:push\n2:pop\n3:display\n4:exit\n");
+scanf("%d",&ch);
 switch(ch)
 {
-case 1: printf("enter the no.of elements to be inserted \n");
-scanf("%d",&n);
-printf("enter the elements to be inserted\n");
-for(i=0;i<n;i++)
+case 1:printf("enter the element you want to insert");
+scanf("%d",&item);
+head=push(head,item);
+break;
+case 2:head=pop(head);
+       break;
+case 3:display(head);
+       break;
+case 4:break;
+default:printf("invalid choice\n");
+        break;
+};
+}while(ch!=4);
+return 0;
+}
+NODE getnode()
 {
-scanf("%d",&it);
-insert(it,&re,qu);
+NODE p;
+p=(NODE)malloc(sizeof(struct node));
+if(p!=NULL)
+return p;
+else
+{
+printf("memory could not be allocated\n");
+exit(0);
 }
-break;
-case 2: printf("enter the no.of elements to be deleted\n");
-scanf("%d",&nd);
-printf("the deleted elements are\n");
-for(i=0;i<nd;i++)
-printf("%d\n",delete(qu,&fr,&re));
-break;
-case 3: display(qu,re,fr);
-break;
-default: printf("invalid input\n");
 }
-printf("enter next choice or -1 to exit\n");
-scanf("%d",&ch);
+NODE push(NODE head,int item)
+{
+NODE p;
+p=getnode();
+p->data=item;
+p->next=head;
+head=p;
+return head;
 }
-return 0; 
+NODE pop(NODE head)
+{
+NODE p=head;
+if(head==NULL)
+{
+printf("list is empty\n");
+return head;
+}
+printf("deleted element is %d\n",p->data);
+head=p->next;
+free(p);
+return head;
+}
+void display(NODE head)
+{
+NODE p;
+if(head==NULL)
+{
+printf("list is empty\n");
+exit(0);
+}
+p=head;
+while(p!=NULL)
+{
+printf("%d",p->data);
+printf("\n");
+p=p->next;
+}
 }
